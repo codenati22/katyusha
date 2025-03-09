@@ -1,0 +1,60 @@
+# codemagic.yaml
+workflows:
+  ios-workflow:
+    name: iOS Workflow
+    max_build_duration: 120
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install Flutter dependencies
+        script: |
+          flutter pub get
+      - name: Generate app icons
+        script: |
+          flutter pub run flutter_launcher_icons:main
+      - name: Configure launch screen
+        script: |
+          # Create LaunchImage.imageset directory
+          mkdir -p ios/Runner/Assets.xcassets/LaunchImage.imageset
+          # Copy launch_screen.png to the imageset
+          cp assets/launch_screen.png ios/Runner/Assets.xcassets/LaunchImage.imageset/launch_screen.png
+          # Create Contents.json for LaunchImage.imageset
+          echo "{" > ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "  \"images\" : [" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "    {" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "      \"idiom\" : \"universal\"," >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "      \"filename\" : \"launch_screen.png\"," >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "      \"scale\" : \"1x\"" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "    }," >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "    {" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "      \"idiom\" : \"universal\"," >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "      \"filename\" : \"launch_screen.png\"," >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "      \"scale\" : \"2x\"" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "    }," >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "    {" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "      \"idiom\" : \"universal\"," >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "      \"filename\" : \"launch_screen.png\"," >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "      \"scale\" : \"3x\"" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "    }" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "  ]," >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "  \"info\" : {" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "    \"version\" : 1," >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "    \"author\" : \"xai\"" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "  }" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          echo "}" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+          # Update Info.plist to use the launch image
+          plutil -insert UILaunchStoryboardName -string "LaunchScreen" ios/Runner/Info.plist
+      - name: Build unsigned IPA
+        script: |
+          flutter build ios --release --no-codesign --target-platform ios
+    artifacts:
+      - build/ios/iphoneos/*.ipa
+    publishing:
+      email:
+        recipients:
+          - eduardoalihandro@gmail.com
+        notify:
+          success: true
+          failure: true
