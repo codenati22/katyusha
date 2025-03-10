@@ -47,6 +47,11 @@ workflows:
       - name: Build unsigned IPA
         script: |
           flutter build ios --release --no-codesign
+          # Package Runner.app into an IPA
+          mkdir -p build/ios/iphoneos/Payload
+          mv build/ios/iphoneos/Runner.app build/ios/iphoneos/Payload/
+          cd build/ios/iphoneos
+          zip -r katyusha.ipa Payload
     artifacts:
       - build/ios/iphoneos/*.ipa
     publishing:
@@ -57,4 +62,4 @@ workflows:
           success: true
           failure: true
 
-          # - eduardoalihandro@gmail.com
+          # - eduardoalihandro@gmail.com test 3
