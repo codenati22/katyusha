@@ -46,7 +46,7 @@ workflows:
           echo "}" >> ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
       - name: Build unsigned IPA
         script: |
-          flutter build ios --release --no-codesign --target-platform ios
+          flutter build ios --release --no-codesign
     artifacts:
       - build/ios/iphoneos/*.ipa
     publishing:
@@ -56,3 +56,5 @@ workflows:
         notify:
           success: true
           failure: true
+
+          # - eduardoalihandro@gmail.com
