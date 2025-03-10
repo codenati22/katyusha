@@ -25,9 +25,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final departments = [
     'Computer Science',
     'Engineering',
-    'Mathematics',
-    'Physics',
-    'Biology',
+    'Marketing',
+    'unk',
+    'duh!',
   ];
 
   @override
